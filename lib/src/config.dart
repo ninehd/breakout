@@ -14,8 +14,8 @@ const brickColors = [                                           // Add this cons
 ];
 
 
-const gameWidth = 820.0;
-const gameHeight = 1600.0;
+const gameWidth = 720.0;
+const gameHeight = 1280.0;
 const ballRadius = gameWidth * 0.02;
 const batWidth = gameWidth * 0.2;
 const batHeight = ballRadius * 2;
