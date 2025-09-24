@@ -31,6 +31,7 @@ class BrickBreaker extends FlameGame
   double get height => size.y;
 
   late PlayState _playState;
+
   PlayState get playState => _playState;
 
   set playState(PlayState playState) {
@@ -106,12 +107,11 @@ class BrickBreaker extends FlameGame
     ]);
   }
 
-  @override                                                     // Add from here...
+  @override
   void onTapDown(TapDownEvent event) {
     super.onTapDown(event);
     startGame();
-  }                                                             // To here.
-
+  }
 
   @override
   KeyEventResult onKeyEvent(
@@ -119,16 +119,32 @@ class BrickBreaker extends FlameGame
     Set<LogicalKeyboardKey> keysPressed,
   ) {
     super.onKeyEvent(event, keysPressed);
+
+    // Start game from idle state when pressing Space or Enter
+    if (event.logicalKey == LogicalKeyboardKey.space ||
+        event.logicalKey == LogicalKeyboardKey.enter) {
+      startGame();
+      return KeyEventResult.handled;
+    }
+
+    // Handle arrow keys
     switch (event.logicalKey) {
       case LogicalKeyboardKey.arrowLeft:
-        world.children.query<Bat>().first.moveBy(-batStep);
+        if (playState == PlayState.playing) {
+          world.children.query<Bat>().first.moveBy(-batStep);
+          return KeyEventResult.handled;
+        }
+        return KeyEventResult.ignored;
+
       case LogicalKeyboardKey.arrowRight:
-        world.children.query<Bat>().first.moveBy(batStep);
-      case LogicalKeyboardKey.space:
-      case LogicalKeyboardKey.enter:
-        startGame();
+        if (playState == PlayState.playing) {
+          world.children.query<Bat>().first.moveBy(batStep);
+          return KeyEventResult.handled;
+        }
+        return KeyEventResult.ignored;
+      default:
+        return KeyEventResult.ignored;
     }
-    return KeyEventResult.handled;
   }
 
   @override
@@ -143,5 +159,4 @@ class BrickBreaker extends FlameGame
 
   @override
   Color backgroundColor() => const Color(0xfff2e8cf);
-
 }
